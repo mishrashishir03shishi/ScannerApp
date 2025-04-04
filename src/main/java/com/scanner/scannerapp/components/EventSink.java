@@ -21,9 +21,11 @@ public class EventSink {
 
     public List<KeyPressEvent> drainEvents() {
         List<KeyPressEvent> drained = new ArrayList<>();
-        KeyPressEvent e;
-        while ((e = eventQueue.poll()) != null) {
-            drained.add(e);
+        int numberOfElements = eventQueue.size();
+        int counter = 0;
+        while (counter<numberOfElements) {
+            drained.add(eventQueue.poll());
+            counter++;
         }
         return drained;
     }
