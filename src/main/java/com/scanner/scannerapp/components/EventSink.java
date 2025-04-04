@@ -15,6 +15,7 @@ public class EventSink {
     private final Queue<KeyPressEvent> eventQueue = new ConcurrentLinkedQueue<>();
 
     public void enqueue(KeyPressEvent event) {
+        System.out.println("event recieved" + event);
         eventQueue.add(event); // thread-safe
     }
 
