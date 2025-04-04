@@ -51,7 +51,7 @@ public class Canvas {
 
 
     public void colorCurrentCell(Color color){
-        this.grid[currentPosition.getX()][this.currentPosition.getY()] = color.getCode();
+        this.grid[currentPosition.getY()][this.currentPosition.getX()] = color.getCode();
     }
 
     public void clearCanvas(){
@@ -69,7 +69,7 @@ public class Canvas {
     }
 
     public Color getCurrentPositionColor(){
-        return Color.fromCode(this.grid[currentPosition.getX()][this.currentPosition.getY()]);
+        return Color.fromCode(this.grid[currentPosition.getY()][this.currentPosition.getX()]);
     }
 
 
