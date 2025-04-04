@@ -33,6 +33,11 @@ public class Worker {
     2. if it has elements perform Operation1
     3. else check whether it is right feasible to perform operation 2
     4. if yes then perform, else go back to checking again
+
+    if already focussed do not do anything if steps=0
+    Key presses were there but Did not move any step:
+        if color is already green do not do anything
+        if it is red also do not do anything as the microscope is already focussed
      */
     private void startWorkerLoop() {
         Executors.newSingleThreadExecutor().submit(() -> {
@@ -42,14 +47,6 @@ public class Worker {
                 } else {
                     if(coloringRedRequired){
                         performOperation2();
-                    }
-                    else{
-                        try{
-                            Thread.sleep(100);
-                        }
-                        catch (InterruptedException e){
-                            System.out.println(e.getMessage());
-                        }
                     }
                 }
             }
@@ -77,18 +74,23 @@ public class Worker {
             if(stepsMoved>0){
                 long sleepTime = getSleepTime(stepsMoved);
                 Thread.sleep(sleepTime);
-            }
-            if(isColouringGreenRequired()){
-                canvas.colorCurrentCell(Color.GREEN);
-                canvasWebSocketHandler.broadcastUpdate(
-                        new CanvasUpdateEvent(
-                                canvas.getCurrentPosition(),
-                                Color.GREEN.getCode()
-                        )
-                );
+                if(isColouringGreenRequired()){
+                    canvas.colorCurrentCell(Color.GREEN);
+                    canvasWebSocketHandler.broadcastUpdate(
+                            new CanvasUpdateEvent(
+                                    canvas.getCurrentPosition(),
+                                    Color.GREEN.getCode()
+                            )
+                    );
+                }
+                coloringRedRequired = true;
                 //TODO publish event for making the dot green at canvas.getCurrentPosition
             }
-            coloringRedRequired = true;
+            else {
+                if(canvas.getCurrentPositionColor().equals(Color.GREEN)){
+                    coloringRedRequired = true;
+                }
+            }
         }
     }
 
