@@ -76,15 +76,13 @@ public class Worker {
             if(stepsMoved>0){
                 long sleepTime = getSleepTime(stepsMoved);
                 Thread.sleep(sleepTime);
-                if(isColouringGreenRequired()){
-                    canvas.colorCurrentCell(Color.GREEN);
-                    canvasWebSocketHandler.broadcastUpdate(
-                            new CanvasUpdateEvent(
-                                    canvas.getCurrentPosition(),
-                                    Color.GREEN.getCode()
-                            )
-                    );
-                }
+                canvas.colorCurrentCell(Color.GREEN);
+                canvasWebSocketHandler.broadcastUpdate(
+                        new CanvasUpdateEvent(
+                                canvas.getCurrentPosition(),
+                                Color.GREEN.getCode()
+                        )
+                );
                 coloringRedRequired = true;
             }
             else {
@@ -132,18 +130,6 @@ public class Worker {
         }
 
         return Math.abs(canvas.getCurrentPosition().getX()-initialPosition.getX()) + Math.abs(canvas.getCurrentPosition().getY() - initialPosition.getY());
-    }
-
-    private boolean isColouringGreenRequired(){
-        return !canvas.getCurrentPositionColor().equals(Color.GREEN);
-    }
-
-    /*
-    What if the cell is already red?
-    //TODO think about this case if anything could go wrong
-     */
-    private boolean isColouringRedRequired(){
-        return !canvas.getCurrentPositionColor().equals(Color.RED);
     }
 
     private long getSleepTime(int size){
