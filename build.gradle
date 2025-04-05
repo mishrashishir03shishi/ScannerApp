@@ -8,6 +8,11 @@ plugins {
 group = 'com.scanner'
 version = '0.0.1-SNAPSHOT'
 
+war {
+    archiveFileName = 'scannerapp.war'
+}
+
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
