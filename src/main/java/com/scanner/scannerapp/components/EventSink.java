@@ -23,10 +23,14 @@ public class EventSink {
         List<KeyPressEvent> drained = new ArrayList<>();
         int numberOfElements = eventQueue.size();
         int counter = 0;
+        System.out.println("Starting to drain elements");
         while (counter<numberOfElements) {
-            drained.add(eventQueue.poll());
+            KeyPressEvent e = eventQueue.poll();
+            System.out.println(e);
+            drained.add(e);
             counter++;
         }
+        System.out.println("Drained " + numberOfElements + " elements");
         return drained;
     }
 

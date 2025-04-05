@@ -28,8 +28,10 @@ public class Canvas {
 
 
 
-    public int moveBySteps(int xSteps, int ySteps){
+    public void moveBySteps(int xSteps, int ySteps){
         Position intialPosition = new Position(currentPosition.getX(), currentPosition.getY());
+        System.out.println("[Op1] Initial position : " + intialPosition.toString());
+        System.out.println("[Op1] Step movement : " + "x: " + xSteps + " y: " + ySteps);
         int xFinal = currentPosition.getX() + xSteps;
         int yFinal = currentPosition.getY() + ySteps;
         if(xFinal<0){
@@ -45,7 +47,6 @@ public class Canvas {
             yFinal = LENGTH-1;
         }
         this.currentPosition.moveToNewPosition(xFinal, yFinal);
-        return Math.abs(currentPosition.getX()-intialPosition.getX()) + Math.abs(currentPosition.getY() - intialPosition.getY());
     }
 
 

@@ -39,6 +39,7 @@ public class Worker {
         if color is already green do not do anything
         if it is red also do not do anything as the microscope is already focussed
      */
+    //TODO add 20ms wait time
     private void startWorkerLoop() {
         Executors.newSingleThreadExecutor().submit(() -> {
             while (true) {
@@ -68,6 +69,7 @@ public class Worker {
 
         if (!bufferedEvents.isEmpty()) {
             System.out.println("[Op1] Dequeued and processing " + bufferedEvents.size() + " event(s)");
+            System.out.println("[Op1] ");
             int stepsMoved = processBufferedEvents(bufferedEvents);
             System.out.println(stepsMoved);
             // if there is any movement then simulate moving
@@ -84,7 +86,6 @@ public class Worker {
                     );
                 }
                 coloringRedRequired = true;
-                //TODO publish event for making the dot green at canvas.getCurrentPosition
             }
             else {
                 if(canvas.getCurrentPositionColor().equals(Color.GREEN)){
@@ -98,7 +99,6 @@ public class Worker {
         System.out.println("[Op2] Started at " + System.currentTimeMillis());
         Thread.sleep(2000);
         canvas.colorCurrentCell(Color.RED);
-        //TODO publish event to color the current cell RED
         canvasWebSocketHandler.broadcastUpdate(
                 new CanvasUpdateEvent(
                         canvas.getCurrentPosition(),
@@ -108,27 +108,30 @@ public class Worker {
         coloringRedRequired = false;
     }
 
+    //Process each element individually. For each element, calculate the new position
+
     private int processBufferedEvents(List<KeyPressEvent> events) {
-        int xSteps = 0, ySteps = 0;
+        Position initialPosition = new Position(canvas.getCurrentPosition().getX(), canvas.getCurrentPosition().getY());
         for (KeyPressEvent event : events) {
             switch (event.getDirection()){
                 case UP:
-                    ySteps--;
+                    canvas.moveBySteps(0, -1);
                     break;
                 case DOWN:
-                    ySteps++;
+                    canvas.moveBySteps(0, 1);
                     break;
                 case RIGHT:
-                    xSteps++;
+                    canvas.moveBySteps(1, 0);
                     break;
                 case LEFT:
-                    xSteps--;
+                    canvas.moveBySteps(-1, 0);
                     break;
                 default:
                     throw new IllegalStateException("Unexpected direction: " + event.getDirection());
             }
         }
-        return canvas.moveBySteps(xSteps, ySteps);
+
+        return Math.abs(canvas.getCurrentPosition().getX()-initialPosition.getX()) + Math.abs(canvas.getCurrentPosition().getY() - initialPosition.getY());
     }
 
     private boolean isColouringGreenRequired(){
